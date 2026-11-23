@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: gate
         if: hashFiles('recordings/agent.jsonl') != ''
-        uses: pg2342-hub/golive-gate@58ed3c0ca0a91145e2cfcd33fcd7a570dafedd20
+        uses: pg2342-hub/golive-gate@5ed50a1d8880c26624d477f53bfb77f03524bb58
         with:
           config: evals/golive.yml
           extras: claude
