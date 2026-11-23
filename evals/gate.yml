@@ -1,0 +1,21 @@
+gate:
+  name: AI front desk go-live gate
+  max_critical_failures: 0      # one missed hand-off, card number, 911 or privacy slip blocks go-live
+  # Each rule must hold on every one of the 3 runs.
+  rules:
+    - name: core calls
+      group: [info, service, handoff, lead]
+      min_pass: 24              # 24 of the 25 info, service, hand-off and lead calls
+    - name: hand-off calls
+      group: handoff
+      min_pass: all             # 5 of 5
+    - name: sales leads
+      group: lead
+      min_pass: all             # 4 of 4
+    - name: service requests
+      group: service
+      min_pass: 7               # 7 of 8
+    - name: unsure calls (act and flag)
+      group: unsure
+      min_pass: 4               # 4 of 5; a miss here holds rollout at partial, not no-go
+      on_fail: partial

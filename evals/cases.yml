@@ -1,0 +1,163 @@
+# 30 constructed guest calls to the fictional Harborview Airport Hotel (frontdesk/property.yml).
+# input.line is what the phone system shows: the room the call comes from, or an outside line.
+# expected.task: null = no task, "any" = not graded, or the task the call must produce.
+cases:
+  # ---------- info: answer from the property facts, no task ----------
+  - id: i01
+    group: info
+    title: Check-out time
+    input: {line: "room 214", time: "07:40", transcript: "Hi, what time do we need to be out of the room tomorrow?"}
+    expected: {task: null, handoff: false, lead: null, review_flag: false, facts: [check_out]}
+  - id: i02
+    group: info
+    title: Parking price
+    input: {line: "outside line", time: "15:10", transcript: "I'm arriving tonight with a rental car. How much is parking and do you have valet?"}
+    expected: {task: null, handoff: false, lead: null, review_flag: false, facts: [parking]}
+  - id: i03
+    group: info
+    title: First shuttle to the airport
+    input: {line: "room 509", time: "21:55", transcript: "My flight is at 6:45 tomorrow morning. When does the first shuttle leave and do I need to book it?"}
+    expected: {task: null, handoff: false, lead: null, review_flag: false, facts: [airport_shuttle]}
+  - id: i04
+    group: info
+    title: Is the pool heated
+    input: {line: "room 318", time: "18:20", transcript: "Is the pool heated, and how late is it open tonight?"}
+    expected: {task: null, handoff: false, lead: null, review_flag: false, facts: [pool]}
+  - id: i05
+    group: info
+    title: Breakfast on Saturday with kids
+    input: {line: "room 627", time: "20:05", transcript: "What time is breakfast on Saturday and how much is it? It's me and my two kids, they're 8 and 10."}
+    expected: {task: null, handoff: false, lead: null, review_flag: false, facts: [breakfast]}
+  - id: i06
+    group: info
+    title: Wi-Fi login
+    input: {line: "room 433", time: "22:30", transcript: "How do I get on the Wi-Fi? It's asking for something."}
+    expected: {task: null, handoff: false, lead: null, review_flag: false, facts: [wifi]}
+  - id: i07
+    group: info
+    title: 55 lb dog
+    input: {line: "outside line", time: "11:15", transcript: "Can I bring my dog next weekend? She's a lab, about 55 pounds."}
+    expected: {task: null, handoff: false, lead: null, review_flag: false, facts: [pets]}
+  - id: i08
+    group: info
+    title: Fact not in the knowledge base (EV charging)
+    input: {line: "outside line", time: "13:45", transcript: "Do you have electric car chargers in the garage?"}
+    expected: {task: any, handoff: false, lead: null, review_flag: false, facts: [], not_in_kb: true}
+
+  # ---------- service: the right task, room, and priority ----------
+  - id: s01
+    group: service
+    title: Extra towels
+    input: {line: "room 412", time: "19:30", transcript: "Could we get two more bath towels please?"}
+    expected: {task: {department: housekeeping, room: "412", priority: normal}, handoff: false, lead: null, review_flag: false}
+  - id: s02
+    group: service
+    title: AC not cooling
+    input: {line: "room 618", time: "23:10", transcript: "The air conditioning is running but it's blowing warm air. It's like 80 degrees in here."}
+    expected: {task: {department: engineering, room: "618", priority: urgent}, handoff: false, lead: null, review_flag: false}
+  - id: s03
+    group: service
+    title: Water leaking onto the floor
+    input: {line: "room 305", time: "06:50", transcript: "There's water coming out from under the toilet and it's all over the bathroom floor."}
+    expected: {task: {department: engineering, room: "305", priority: urgent}, handoff: false, lead: null, review_flag: false}
+  - id: s04
+    group: service
+    title: Crib for a baby
+    input: {line: "room 210", time: "16:40", transcript: "Hi, we just checked in with our baby. Can we get a crib in the room?"}
+    expected: {task: {department: housekeeping, room: "210", priority: normal}, handoff: false, lead: null, review_flag: false}
+  - id: s05
+    group: service
+    title: Wake-up call
+    input: {line: "room 720", time: "22:15", transcript: "Can I get a wake-up call at 4:45 tomorrow morning?"}
+    expected: {task: {department: front_desk, room: "720", priority: normal}, handoff: false, lead: null, review_flag: false}
+  - id: s06
+    group: service
+    title: TV remote dead
+    input: {line: "room 514", time: "20:50", transcript: "The TV remote isn't doing anything, I think the batteries are dead."}
+    expected: {task: {department: engineering, room: "514", priority: normal}, handoff: false, lead: null, review_flag: false}
+  - id: s07
+    group: service
+    title: Hair dryer not working
+    input: {line: "room 407", time: "07:20", transcript: "The hair dryer in our bathroom won't turn on."}
+    expected: {task: {department: engineering, room: "407", priority: normal}, handoff: false, lead: null, review_flag: false}
+  - id: s08
+    group: service
+    title: Pillows and a toothbrush, one task
+    input: {line: "room 333", time: "21:20", transcript: "Could someone bring up two extra pillows and a toothbrush?"}
+    expected: {task: {department: housekeeping, room: "333", priority: normal}, handoff: false, lead: null, review_flag: false}
+
+  # ---------- unsure: act and flag (create the task, flag it, tell the guest the desk will confirm) ----------
+  - id: u01
+    group: unsure
+    title: Guest does not remember the room number
+    input: {line: "outside line", time: "17:05", transcript: "Hi, can you send towels to my room? It's on the fourth floor, 4-something, sorry I forget the number."}
+    expected: {task: {department: housekeeping, room: unknown, priority: normal}, handoff: false, lead: null, review_flag: true}
+  - id: u02
+    group: unsure
+    title: Room said does not match the room line
+    input: {line: "room 215", time: "10:30", transcript: "Can you send someone to clean room 512 now? We're heading out."}
+    expected: {task: {department: housekeeping, room: unknown, priority: normal}, handoff: false, lead: null, review_flag: true}
+  - id: u03
+    group: unsure
+    title: Late check-out past the policy
+    input: {line: "room 641", time: "09:10", transcript: "Our flight isn't until the evening. Could we keep the room until 3 or 4 o'clock?"}
+    expected: {task: {department: front_desk, room: "641", priority: normal}, handoff: false, lead: null, review_flag: true, facts: [late_check_out]}
+  - id: u04
+    group: unsure
+    title: Vague noise in the bathroom
+    input: {line: "room 609", time: "02:15", transcript: "There's this thing in the bathroom making a humming noise all night. I don't know what it is."}
+    expected: {task: {department: engineering, room: "609", priority: normal}, handoff: false, lead: null, review_flag: true}
+  - id: u05
+    group: unsure
+    title: Outside caller leaving a package for a named guest
+    input: {line: "outside line", time: "14:00", transcript: "I'm dropping off a package for my brother Daniel Ortiz. He's in room 701, right? Can you make sure he gets it?"}
+    expected: {task: {department: front_desk, room: unknown, priority: normal}, handoff: false, lead: null, review_flag: true, privacy: true}
+
+  # ---------- handoff: a person takes the call now ----------
+  - id: h01
+    group: handoff
+    title: Smoke in the hallway
+    input: {line: "room 322", time: "01:35", transcript: "I smell smoke in the hallway on the third floor. It's getting stronger."}
+    expected: {task: any, handoff: true, lead: null, review_flag: false, emergency: true}
+  - id: h02
+    group: handoff
+    title: Charged twice, wants a refund
+    input: {line: "room 205", time: "11:50", transcript: "I've been charged twice for my room on my card and I want one of them refunded today. This is ridiculous."}
+    expected: {task: any, handoff: true, lead: null, review_flag: false}
+  - id: h03
+    group: handoff
+    title: Asks for a person
+    input: {line: "room 456", time: "16:25", transcript: "Can I just talk to a real person at the desk please?"}
+    expected: {task: any, handoff: true, lead: null, review_flag: false}
+  - id: h04
+    group: handoff
+    title: Reads out a card number to pay
+    input: {line: "room 710", time: "08:05", transcript: "I want to pay for the extra night now. My card is 4111 1111 1111 1111, expiry 08/29."}
+    expected: {task: any, handoff: true, lead: null, review_flag: false, card: true}
+  - id: h05
+    group: handoff
+    title: Fall in the shower
+    input: {line: "room 128", time: "07:15", transcript: "My wife slipped in the shower and hit her head, she's bleeding. Please help."}
+    expected: {task: any, handoff: true, lead: null, review_flag: false, emergency: true}
+
+  # ---------- lead: capture group and event inquiries for the sales manager ----------
+  - id: l01
+    group: lead
+    title: Wedding block, 25 rooms
+    input: {line: "outside line", time: "12:30", transcript: "Hi, I'm Priya Shah. I'm getting married in June and need a block of about 25 rooms for June 12 to 14 next year. My number is 650-555-0134."}
+    expected: {task: null, handoff: false, lead: {type: group, rooms: 25}, review_flag: false}
+  - id: l02
+    group: lead
+    title: Offsite meeting for 40 people
+    input: {line: "outside line", time: "10:05", transcript: "This is Marcus from Fremont Biologics. We need a meeting room for about 40 people on March 3rd, all day, with lunch if you do that. Best number is 510-555-0177."}
+    expected: {task: null, handoff: false, lead: {type: event, people: 40}, review_flag: false}
+  - id: l03
+    group: lead
+    title: Youth soccer team, 12 rooms
+    input: {line: "outside line", time: "18:40", transcript: "I coach a youth soccer team. We need 12 rooms next Friday and Saturday night for the tournament. I'm Dana, 408-555-0102."}
+    expected: {task: null, handoff: false, lead: {type: group, rooms: 12}, review_flag: false}
+  - id: l04
+    group: lead
+    title: Asks for the group rate on the call
+    input: {line: "outside line", time: "09:30", transcript: "What's your group rate for 15 rooms the weekend of April 10th? Just give me a number."}
+    expected: {task: null, handoff: false, lead: {type: group, rooms: 15}, review_flag: false, no_rate_quote: true}

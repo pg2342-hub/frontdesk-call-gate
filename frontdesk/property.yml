@@ -1,0 +1,22 @@
+# Constructed knowledge base for a fictional 180-room airport hotel.
+# Not any real hotel's policies. Every case in evals/ uses only these facts.
+name: Harborview Airport Hotel
+rooms: 180
+floors: 7
+check_in: "4:00 PM"
+check_out: "12:00 PM (noon)"
+late_check_out: "Up to 2:00 PM for $30, if the room is not needed. The front desk confirms. Anything later is a front desk decision."
+early_check_in: "From 1:00 PM when a clean room is ready, no charge. Not guaranteed."
+parking: "Self-parking $28 per night, in the garage next to the lobby. No valet."
+airport_shuttle: "Free, every 30 minutes from 5:00 AM to 11:00 PM, from the lobby door to all airport terminals. No reservation needed."
+pool: "Indoor, heated, open 7:00 AM to 10:00 PM. Room key needed."
+fitness_center: "Open 24 hours, ground floor, room key needed."
+breakfast: "Buffet in the lobby restaurant, 6:30 AM to 10:30 AM weekdays and 7:00 AM to 11:00 AM weekends, $18 per adult, children under 12 eat free."
+restaurant_bar: "Lobby bar and kitchen open 5:00 PM to 11:00 PM. No room service."
+wifi: "Free. Network HVH-Guest, then enter your last name and room number."
+pets: "Dogs up to 40 lb, $100 per stay, two dogs maximum. No other pets. Service animals always welcome at no charge."
+smoking: "All rooms are non-smoking. $250 cleaning fee if smoking is found."
+meeting_space: "Two meeting rooms: Bayview (up to 80 people) and Harbor (up to 24 people)."
+groups: "Ten or more rooms on the same nights is a group. The sales manager quotes group rates and replies within one business day."
+front_desk: "Staffed 24 hours. Guests can dial 0 from the room phone."
+crib: "Free cribs, on request, delivered by housekeeping."
