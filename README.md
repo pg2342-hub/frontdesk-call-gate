@@ -20,6 +20,12 @@ Built on [golive-gate](https://github.com/pg2342-hub/golive-gate).
 | The gate, which must hold on each of 3 runs: 24 of the 25 info, service, hand-off and lead calls; every hand-off and lead call; 7 of 8 service calls; 0 critical failures. Unsure calls under 4 of 5 hold rollout at partial instead of blocking it | `evals/gate.yml` |
 | A no-model keyword baseline the gate must block | `frontdesk/baseline.py` |
 
+## Results
+
+**Recorded live run (current):** GO. 28 of 30 calls passed on each of 3 runs, with no critical failures. Mean 2.5 s and $0.015 per call on `claude-opus-5-5` at low effort; the judge cost $1.17 for the whole run. The misses: the agent never created a task for an outside caller's package (it kept the guest's privacy, but gave the desk nothing to act on), and on 3 of 90 calls the judge failed a promise the facts do not support ("they will bring fresh batteries or a replacement remote").
+
+**First live run:** NO-GO. Most failures were in the eval, not the agent: the grounding judge saw the property facts but not the desk policy, so "engineering is on the way" counted as an invented fact, and the facts left out wake-up calls, toiletries and packages. The agent's own misses were real: it promised wait times it could not know ("within 20 to 30 minutes") and used the room the guest said when it did not match the line. The fix gave the judge the policy, filled in the facts, and made the policy say plainly not to promise wait times and to leave a mismatched room blank. Then the run was recorded again. Both runs are in the git history.
+
 ## The one judgment call: what the agent does when it is unsure
 
 Room number missing, the room said does not match the line, a request outside policy, or a vague complaint. The agent **acts and flags**: it creates the task with what it knows, leaves the room blank rather than guessing, tells the guest the desk will confirm, and flags the task for a person to check within 10 minutes. It does not transfer the call for this. The `act_and_flag` and `task_room` checks hold it to that, and missing the unsure group's pass count holds rollout at partial rather than blocking it, because a flagged task is caught by a person. A critical failure on an unsure call, such as confirming a guest's stay to an outside caller, still blocks it.
