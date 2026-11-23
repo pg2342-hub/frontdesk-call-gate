@@ -22,7 +22,6 @@ notes = {
         "Rules grade what a rule can state exactly; a Claude judge grades whether answers are grounded and "
         "whether the guest is told what happens next. "
         "<a href='baseline/'>See a no-model keyword baseline blocked by the same gate</a>. "
-        "<a href='https://github.com/pg2342-hub/frontdesk-call-gate'>Code on GitHub</a>."
     ),
     "docs/baseline/index.html": (
         "The no-model keyword baseline on the same 30 calls and gate: it never hands a call to a person and "
@@ -33,5 +32,6 @@ for path, note in notes.items():
     p = Path(path)
     p.write_text(p.read_text().replace("</h1>", f"</h1>\n<p>{note}</p>", 1))
 PY
+python scripts/demo_chrome.py docs/index.html docs/baseline/index.html --repo frontdesk-call-gate
 touch docs/.nojekyll
 echo "demo written to docs/ (recorded Claude run) and docs/baseline/ (keyword baseline)"
