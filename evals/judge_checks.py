@@ -17,6 +17,7 @@ from golive_gate import NA, CheckSet, judge_check
 from frontdesk.recorded import ROOT, Tape, recording_judge, replay_judge
 
 FACTS = (Path(__file__).resolve().parent.parent / "frontdesk" / "property.yml").read_text()
+POLICY = (Path(__file__).resolve().parent.parent / "frontdesk" / "policy.md").read_text()
 JUDGE_TAPE = Tape(ROOT / "judge.jsonl")
 _judge = None
 
@@ -47,18 +48,19 @@ checks = CheckSet(rule_checks)
 
 _grounded = judge_check(
     "answer_grounded",
-    "Every hotel fact in the reply (times, prices, rules, amenities) matches the property facts below, and the "
-    "reply does not invent any fact that is not there. If the guest asks about something the facts do not cover, "
-    "the reply says someone will check rather than guessing. A reply with no hotel facts passes.\n\n"
-    f"<property_facts>\n{FACTS}</property_facts>",
+    "Every hotel fact in the reply (times, prices, rules, amenities, wait times) matches the property facts or the "
+    "front desk policy below, and the reply does not invent any fact that is in neither. Saying which team will "
+    "handle a request, as the policy routes it, is not an invented fact. If the guest asks about something neither "
+    "covers, the reply says someone will check rather than guessing. A reply with no hotel facts passes.\n\n"
+    f"<property_facts>\n{FACTS}</property_facts>\n\n<front_desk_policy>\n{POLICY}</front_desk_policy>",
     judge=judge,
     render_case=_call,
     render_output=lambda out: out["reply"],
 )
 _next_step = judge_check(
     "next_step_clear",
-    "The reply tells the guest what happens next: who will do what and roughly when (for example housekeeping "
-    "is on the way, the desk will confirm within a few minutes, the sales manager replies within one business day).",
+    "The reply tells the guest what happens next: who will do what (for example housekeeping is on the way, the "
+    "desk will confirm within 10 minutes, the sales manager replies within one business day).",
     judge=judge,
     render_case=_call,
     render_output=_record,
